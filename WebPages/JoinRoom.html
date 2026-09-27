@@ -2,18 +2,66 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Join Room</title>
+    <title>Book Chat - Join Room</title>
+    <link rel="stylesheet" href="BookChat.css">
+    <script src="BookChat.js" async></script>
 </head>
 <body>
-
-    <h1> Join a Room Here</h1>
-
-
-
-
-
-
-
-    
+    <header>
+        Book Chat!
+    </header>
+    <div class="page-content">
+        <h1>
+            Join a Room Here
+        </h1>
+        <div id="roomList" class="room-list">
+            <!-- The following within this comment is just a example of how the room elements should look. -->
+            <div class="room-item">
+                <h2>Moby Dick</h2>
+                <p>
+                    <strong>Author:</strong>
+                    Herman Melville
+                </p>
+                <p>
+                    <strong>Date:</strong>
+                    September 27, 2026
+                </p>
+                <p>
+                    <strong>Time:</strong>
+                    1:00 PM
+                </p>
+                <button
+                    class="basic-button"
+                    onclick="location.href='Room.html'">
+                    Join Room
+                </button>
+            </div>
+            <div class="room-item">
+                <h2>The Great Gatsby</h2>
+                <p>
+                    <strong>Author:</strong>
+                    F. Scott Fitzgerald
+                </p>
+                <p>
+                    <strong>Date:</strong>
+                    September 27, 2026
+                </p>
+                <p>
+                    <strong>Time:</strong>
+                    1:00 PM
+                </p>
+                <button
+                    class="basic-button"
+                    onclick="TODO:placeholder">
+                    Join Room
+                </button>
+            </div>
+        </div>
+        <button
+            class="back-button"
+            onclick="location.href='MainMenu.html'">
+            Back to Main Menu
+        </button>
+    </div>
 </body>
 </html>
