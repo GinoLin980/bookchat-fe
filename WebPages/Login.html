@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Book Chat - Login</title>
     <link rel="stylesheet" href="BookChat.css">
-    <script src="BookChat.js" async></script>
+    <script src="BookChat.js" defer></script>
 </head>
 <body>
     <header>
@@ -16,7 +16,7 @@
         </h1>
         <form 
             id="loginForm"
-            onsubmit="TODO:placeholder">
+            onsubmit="login(this.username.value, this.password.value)">
             <div class="form-group">
                 <label for="username">
                     Username:
