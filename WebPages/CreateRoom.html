@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <title>Book Chat - Create Room</title>
     <link rel="stylesheet" href="BookChat.css">
-    <script src="BookChat.js" async></script>
+    <!-- defer: both run in order after the HTML is parsed.
+         BookChat.js first so its functions exist when CreateRoom.js runs. -->
+    <script src="BookChat.js" defer></script>
+    <script src="CreateRoom.js" defer></script>
 </head>
 <body>
     <header>
@@ -14,9 +17,7 @@
         <h1>
             Create a Room Here
         </h1>
-        <form
-            id=""createRoomForm"
-            onsubmit="TODO:placeholder">
+        <form id="createRoomForm">
             <div class="form-group">
                 <label for="roomTitle">
                     Room Title:
@@ -48,7 +49,7 @@
                     required>
             </div>
             <div class="form-group">
-                <label for="dicussionDate">
+                <label for="discussionDate">
                     Discussion Date:
                 </label>
                 <input
@@ -67,6 +68,8 @@
                     name="discussionTime"
                     required>
             </div>
+            <!-- Success/error messages show here -->
+            <p id="formMessage" aria-live="polite"></p>
             <button
                 type="submit"
                 class="basic-button">
