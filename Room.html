@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Chat - Room</title>
+    <link rel="stylesheet" href="BookChat.css">
+    <script type="module" src="room.js"></script>
+</head>
+<body>
+    <header>
+        Book Chat!
+    </header>
+    <div class="page-content">
+        <h1>
+            Discuss Your Book Here
+        </h1>
+        <div id="roomInfo" class="room-info">
+            <h2 id="roomTitle">Loading room...</h2>
+            <p>
+                <strong>Book:</strong>
+                <span id="roomBook"></span>
+            </p>
+            <p>
+                <strong>Date:</strong>
+                <span id="roomDate"></span>
+            </p>
+            <p>
+                <strong>Time:</strong>
+                <span id="roomTime"></span>
+            </p>
+            <p>
+                <strong>Author:</strong>
+                <span id="roomAuthor"></span>
+            </p>
+            <p id="roomError" role="alert" hidden></p>
+            <!-- JS should make this button disappear for non-moderators 
+                (Note it is currently displayed for testing purposes)
+                also that onclick should change to reference the specific manage page for the specific room we are on -->
+            <button
+                id="manageRoomButton"
+                class="basic-button"
+                >
+                <!-- Add this to inline styling for the button style="display: none;" -->
+                Manage Room
+            </button>
+        </div>
+        <div class="current-turn">
+            Current Turn:
+            <span id="currentTurn">
+                Example Name JS Should Alter This
+            </span>
+        </div>
+        <!-- JS should change this to appropriate msg depending on 
+            if they have permission or not, if it is their turn, if they are logged in.
+            Along the lines of:
+            Not permitted:
+                Your Participation
+                You do not have permission to participate/comment
+                [button to request permission]
+            Permission given but waiting your turn:
+                Your Participation
+                You have permission to participate
+                Waiting for the moderator to give you a turn
+                Comment box should be disabled
+                [buttons to post comment or pass (note these shouldn't work in this case)]
+            Permission given and it is your turn:
+                Your Participation
+                It is your turn
+                Comment box should be enabled
+                [buttons to post comment or pass (btns should work in this case)]
+            Not logged in:
+                Your Participation
+                You must be logged in to participate/comment
+                [login button]
+             -->
+        <div class="participation-status">
+            <h2>Your Participation Status</h2>
+            <p id="participationStatus">
+                You do not currently have the turn.
+            </p>
+        </div>
+        <h2>Discussion</h2>
+        <div id="comments">
+        </div>
+        <div id="commentArea" class="comment-area">
+            <form
+                id="commentForm">
+                <div class="form-group">
+                    <label for="commentText">
+                        Comment:
+                    </label>
+                    <textarea
+                        id="commentText"
+                        name="commentText"
+                        rows="5"
+                        placeholder="You can comment when it is your turn"
+                        disabled>
+                    </textarea>
+                </div>
+                <button
+                    type="submit"
+                    id="postButton"
+                    class="basic-button"
+                    disabled>
+                    Post Comment
+                </button>
+                <button
+                    type="button"
+                    id="passButton"
+                    class="basic-button"
+                    disabled>
+                    Pass Turn
+                </button>
+            </form>
+        </div>
+        <div class="permission-request">
+            <h2>Participate in Discussion</h2>
+            <p>
+                You must have read this book to participate in the discussion.
+            </p>
+            <form
+                id="permissionForm">
+                <div class="form-group">
+                    <label>
+                        <input
+                            type="checkbox"
+                            id="readBook"
+                            name="readBook">
+                        I have read this book
+                    </label>
+                </div>
+                <button
+                    type="submit"
+                    class="basic-button">
+                    Request Permission to Comment
+                </button>
+            </form>
+        </div>
+        <button
+            class="back-button"
+            onclick="location.href='MainMenu.html'">
+            Back to Main Menu
+        </button>
+    </div>
+</body>
+</html>
