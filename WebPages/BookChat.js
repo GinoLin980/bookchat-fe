@@ -177,12 +177,14 @@ async function createRoom(title, bookTitle, bookAuthor, scheduledDate){
         scheduled_date: toISODate(scheduledDate)
     });
 }
-//POST /api/v1/comments
-//not built on the backend yet, update the path when gino adds it
-//existing comments come back inside getRoom() as room.comments
-//number because ids from the url are strings, but the backend expects a number --go langauge
+//GET /api/v1/rooms/{id}/comments
+//returns an array of { content, user_id, username }
+async function getComments(roomId){
+    return request("GET", `/rooms/${encodeURIComponent(roomId)}/comments`);
+}
+
 async function createComment(roomId, content){
-    return request("POST", "/comments", { room_id: Number(roomId), content });
+    return request("POST", `/rooms/${encodeURIComponent(roomId)}/comments`, { content });
 }
 // PATCH /rooms/{id} — moderator only
 //pass only what you want to change using the backend names e.g. updateRoom(5, { title: "New title" })
