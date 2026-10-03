@@ -1,9 +1,9 @@
 /* global isLoggedIn, createRoom */
 // CreateRoom.js - page script for CreateRoom.html
 // Creating a room needs a token, so send logged-out users to log in first.
-// if (!isLoggedIn()) {
-//     location.href = "Login.html"; // change if your login page is named differently
-// }
+if (!isLoggedIn()) {
+    location.href = "Login.html"; 
+}
 const createRoomForm = document.getElementById("createRoomForm");
 const createRoomMessage = document.getElementById("formMessage");
 const createRoomButton = createRoomForm.querySelector("button[type='submit']");
