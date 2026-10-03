@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Chat - Login</title>
+    <link rel="stylesheet" href="BookChat.css">
+    <script src="BookChat.js" defer></script>
+</head>
+<body>
+    <header>
+        Book Chat!
+    </header>
+    <div class="page-content">
+        <h1>
+            Login Here
+        </h1>
+        <form 
+            id="loginForm"
+            onsubmit="login(this.username.value, this.password.value)">
+            <div class="form-group">
+                <label for="username">
+                    Username:
+                </label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="password">
+                    Password:
+                </label>
+                <input
+                    type="text"
+                    id="password"
+                    name="password"
+                    required>
+            </div>
+            <button
+                type="submit"
+                class="basic-button">
+                Login
+            </button>
+        </form>
+        <button
+            class="back-button"
+            onclick="location.href='MainMenu.html'">
+            Back to Main Menu
+        </button>
+    </div>
+</body>
+</html>

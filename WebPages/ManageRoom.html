@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Chat - Manage Room</title>
+    <link rel="stylesheet" href="BookChat.css">
+    <script src="BookChat.js" async></script>
+</head>
+<body>
+    <header>
+        Book Chat!
+    </header>
+    <div class="page-content">
+        <h1>
+            Manage a Room Here
+        </h1>
+        <!-- Again the following is just an example of the room elements the js should place -->
+        <div id="roomInfo" class="room-info">
+            <h2>Moby Dick</h2>
+            <p>
+                <strong>Author:</strong>
+                Herman Melville
+            </p>
+            <p>
+                <strong>Date:</strong>
+                September 27, 2026
+            </p>
+            <p>
+                <strong>Time:</strong>
+                1:00 PM
+            </p>
+            <p>
+                <strong>Moderator:</strong>
+                Jason Zhou
+            </p>
+        </div>
+        <h2>Permission Requests</h2>
+        <div id="userPermissionList" class="user-list">
+            <!-- Again note here JS should be placing the users these are examples -->
+            <div class="user-item">
+                Jason Zhou
+                <button
+                    class="basic-button"
+                    onclick="TODO:placeholder_here_approve_user">
+                    Allow
+                </button>
+                <button
+                    class="basic-button"
+                    onclick="TODO:placeholder_here_deny_user">
+                    Deny
+                </button>
+            </div>
+            <div class="user-item">
+                Connor Norby
+                <button
+                    class="basic-button"
+                    onclick="TODO:placeholder_here_approve_user">
+                    Allow
+                </button>
+                <button
+                    class="basic-button"
+                    onclick="TODO:placeholder_here_deny_user">
+                    Deny
+                </button>
+            </div>
+        </div>
+        <h2>Current Turn</h2>
+        <div class="current-turn">
+            <span id="currentTurn">
+                Example Name JS should change this
+            </span>
+        </div>
+        <h2>User List</h2>
+        <div id="userTurnList" class="user-list">
+            <!-- Again note here JS should be placing the users these are examples -->
+            <div class="user-item">
+                Jason Zhou
+                <button
+                    class="basic-button"
+                    onclick="TODO:placeholder_giveturn">
+                    Give Turn
+                </button>
+            </div>
+            <div class="user-item">
+                Connor Norby
+                <button
+                    class="basic-button"
+                    onclick="TODO:placeholder_giveturn">
+                    Give Turn
+                </button>
+            </div>
+        </div>
+        <h2>Room Controls</h2>
+        <button
+            class="basic-button"
+            onclick="TODO:placeholder_enddiscussion">
+            End Discussion
+        </button>
+        <br>
+        <!-- Note that JS should reference this to the Room this manage page manages-->
+        <button
+            id="backToRoom"
+            class="back-button"
+            onclick="location.href='Room.html'">
+            Back to Room
+        </button>
+    </div>
+</body>
+</html>

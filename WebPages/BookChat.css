@@ -1,0 +1,219 @@
+:root {
+    --bc-green: #8da683;
+    --bc-gold: 	#be8f3c;
+    --bc-orange: #d99d29;
+    --bc-tan: #f2dcb1;
+    --bc-darktan: #eebb55;
+    --bc-darkorange: #dc8920;
+    --bc-dark: #3f493c;
+    --bc-white: #fffaf0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+header {
+    background-color: var(--bc-orange);
+    color: var(--bc-white);
+    text-align: center;
+    padding: 20px;
+    font-size: 35px;
+    font-weight: bold;
+    margin: 20px;
+    border-radius: 10px;
+}
+
+footer {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: var(--bc-gold);
+    color: var(--bc-white);
+    text-align: center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    p {
+        margin: 5px;
+    }
+}
+
+h1 {
+    color: var(--bc-white);
+    text-align: center;
+}
+
+body {
+    background-color: var(--bc-green);
+    font-family: Arial;
+}
+
+.page-content {
+    margin: 20px auto;
+    /* padding: 5px; */
+    /* background-color: var(--bc-darktan); */
+    /* border-radius: 10px; */
+}
+
+.MainMenuButtons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.basic-button {
+    border-style: outset;
+    max-width: 300px;
+    margin: 10px;
+    padding: 10px;
+    font-size: 25px;
+    border-radius: 5px;
+    background-color: var(--bc-orange);
+    border-color: var(--bc-darkorange);
+    color: var(--bc-tan);
+    cursor: pointer;
+}
+
+.basic-button:hover {
+    background-color: var(--bc-darkorange);
+}
+
+.basic-button:disabled {
+    background-color: #999;
+    border-color: #777;
+    cursor: not-allowed;
+}
+
+.back-button {
+    margin-top: 20px;
+    padding: 5px 10px;
+    background-color: var(--bc-gold);
+    color: var(--bc-white);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.back-button:hover {
+    background-color: var(--bc-darkorange);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group :is(input, textarea, select) {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid var(--bc-gold);
+    border-radius: 5px;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.form-group textarea:disabled {
+    background-color: #999;
+    border-color: #777;
+    cursor: not-allowed;
+}
+
+.room-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.room-item {
+    background-color: var(--bc-white);
+    padding: 20px;
+    border-radius: 5px;
+    border-left: 5px solid var(--bc-gold);
+}
+
+.room-item h2 {
+    margin-top: 0;
+}
+
+.room-item p {
+    margin: 5px 0;
+}
+
+.room-info {
+    background-color: var(--bc-white);
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    h2 {
+        margin-top: 0;
+    }
+}
+
+.comment {
+    background-color: var(--bc-white);
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border-left: 5px solid var(--bc-gold);
+}
+
+.comment-author {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.permission-request {
+    background-color: var(--bc-white);
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 5px;
+    h2 {
+        margin-top: 0;
+    }
+}
+
+.permission-request input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.participation-status {
+    background-color: var(--bc-white);
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 5px;
+    h2 {
+        margin-top: 0;
+    }
+}
+
+.current-turn {
+    background-color: var(--bc-orange);
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.user-list {
+    background-color: var(--bc-white);
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.user-item {
+    padding: 10px;
+    border-bottom: 1px solid var(--bc-gold);
+}
