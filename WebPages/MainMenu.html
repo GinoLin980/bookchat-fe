@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="BookChat.css">
     <script src="BookChat.js" defer></script>
 </head>
-<body>
+<body id="MainMenu">
     <header>
         Book Chat!
     </header>
@@ -15,26 +15,33 @@
             Main Menu
         </h1>
         <div class="MainMenuButtons">
-            <button 
-                class="basic-button"
-                onclick="location.href='JoinRoom.html'">
-                Join Room
-            </button>
-            <button 
-                class="basic-button"
-                onclick="location.href='CreateRoom.html'">
-                Create Room
-            </button>
-            <button 
-                class="basic-button"
-                onclick="location.href='Login.html'">
-                Login
-            </button>
-            <button
-                class="basic-button"
-                onclick="location.href='Register.html'">
-                Register
-            </button>
+            <div class="room-actions">
+                <button 
+                    class="basic-button"
+                    onclick="location.href='CreateRoom.html'">
+                    Create Room
+                </button>
+                <button 
+                    class="basic-button"
+                    onclick="location.href='JoinRoom.html'">
+                    Join Room
+                </button>
+            </div>
+            
+            <hr class="form-divider">
+
+            <div class="account-actions">
+                <button 
+                    class="basic-button"
+                    onclick="location.href='Login.html'">
+                    Login
+                </button>
+                <button
+                    class="basic-button"
+                    onclick="location.href='Register.html'">
+                    Register
+                </button>
+            </div>
         </div>
     </div>
     <footer>
