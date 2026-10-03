@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>Book Chat - Manage Room</title>
     <link rel="stylesheet" href="BookChat.css">
-    <script src="BookChat.js" async></script>
+    <script src="BookChat.js" defer></script>
+    <script src="ManageRoom.js" defer></script>
 </head>
 <body>
     <header>
@@ -94,16 +95,15 @@
         </div>
         <h2>Room Controls</h2>
         <button
-            class="basic-button"
-            onclick="TODO:placeholder_enddiscussion">
+            id="endDiscussionButton"
+            class="basic-button">
             End Discussion
         </button>
         <br>
         <!-- Note that JS should reference this to the Room this manage page manages-->
         <button
             id="backToRoom"
-            class="back-button"
-            onclick="location.href='Room.html'">
+            class="back-button">
             Back to Room
         </button>
     </div>

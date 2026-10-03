@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>Book Chat - Register</title>
     <link rel="stylesheet" href="BookChat.css">
-    <script src="BookChat.js" async></script>
+    <script src="BookChat.js" defer></script>
+    <script src="Register.js" defer></script>
 </head>
 <body>
     <header>
@@ -14,9 +15,7 @@
         <h1>
             Register Here
         </h1>
-        <form 
-            id="registerForm"
-            onsubmit="register(this.username.value, this.password.value)">
+        <form id="registerForm">
             <div class="form-group">
                 <label for="username">
                     Username:
@@ -32,7 +31,7 @@
                     Password:
                 </label>
                 <input
-                    type="text"
+                    type="password"
                     id="password"
                     name="password"
                     required>
@@ -47,6 +46,8 @@
                     name="confirmPassword"
                     required>
             </div>
+            <!-- Success/error messages show here -->
+            <p id="formMessage" aria-live="polite"></p>
             <button
                 type="submit"
                 class="basic-button">
