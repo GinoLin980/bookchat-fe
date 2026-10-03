@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>Book Chat - Room</title>
     <link rel="stylesheet" href="BookChat.css">
-    <script src="BookChat.js" async></script>
+    <script src="BookChat.js" defer></script>
+    <script src="Room.js" defer></script>
 </head>
 <body>
     <header>
@@ -97,9 +98,7 @@
             </div>
         </div>
         <div id="commentArea" class="comment-area">
-            <form
-                id="commentForm"
-                onsubmit="TODO:placeholder">
+            <form id="commentForm">
                 <div class="form-group">
                     <label for="commentText">
                         Comment:
@@ -123,7 +122,6 @@
                     type="button"
                     id="passButton"
                     class="basic-button"
-                    onclick="TODO:placeholder"
                     disabled>
                     Pass Turn
                 </button>
@@ -134,9 +132,7 @@
             <p>
                 You must have read this book to participate in the discussion.
             </p>
-            <form
-                id="permissionForm"
-                onsubmit="TODO:Placeholder">
+            <form id="permissionForm">
                 <div class="form-group">
                     <label>
                         <input

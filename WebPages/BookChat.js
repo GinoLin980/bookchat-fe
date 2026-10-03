@@ -1,4 +1,4 @@
- // bookchat.js the one place the frontend talks to the Go backend.
+// bookchat.js the one place the frontend talks to the Go backend.
 // Pages import the functions they need, e.g.:
 //   import { login, getRooms } from "./bookchat.js";
 // and load their script with <script type="module" src="rooms.js"></script>
@@ -205,4 +205,16 @@ function applyToRoom(roomId) {
 //takes the user id not the username, get it from room.requested in getRoom()
 function approveUser(roomId, userId) {
   return request("POST", `/rooms/${encodeURIComponent(roomId)}/approve`, { approve_user_id: Number(userId) });
+}
+// Deny a permission request — moderator only
+//TODO: match the path/body to the deny route in swagger
+//takes the user id, same as approveUser()
+function denyUser(roomId, userId) {
+  return request("POST", `/rooms/${encodeURIComponent(roomId)}/deny`, { deny_user_id: Number(userId) });
+}
+
+// Pass the turn — only the user whose turn it is
+//TODO: match the path/body to the pass turn route in swagger
+function passTurn(roomId) {
+  return request("POST", `/rooms/${encodeURIComponent(roomId)}/pass`);
 }

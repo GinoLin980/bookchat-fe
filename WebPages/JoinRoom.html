@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Book Chat - Join Room</title>
+    <title>Book Chat - Register</title>
     <link rel="stylesheet" href="BookChat.css">
-    <script src="BookChat.js" async></script>
+    <script src="BookChat.js" defer></script>
+    <script src="Register.js" defer></script>
 </head>
 <body>
     <header>
@@ -12,51 +13,47 @@
     </header>
     <div class="page-content">
         <h1>
-            Join a Room Here
+            Register Here
         </h1>
-        <div id="roomList" class="room-list">
-            <!-- The following within this comment is just a example of how the room elements should look. -->
-            <div class="room-item">
-                <h2>Moby Dick</h2>
-                <p>
-                    <strong>Author:</strong>
-                    Herman Melville
-                </p>
-                <p>
-                    <strong>Date:</strong>
-                    September 27, 2026
-                </p>
-                <p>
-                    <strong>Time:</strong>
-                    1:00 PM
-                </p>
-                <button
-                    class="basic-button"
-                    onclick="location.href='Room.html'">
-                    Join Room
-                </button>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="username">
+                    Username:
+                </label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    required>
             </div>
-            <div class="room-item">
-                <h2>The Great Gatsby</h2>
-                <p>
-                    <strong>Author:</strong>
-                    F. Scott Fitzgerald
-                </p>
-                <p>
-                    <strong>Date:</strong>
-                    September 27, 2026
-                </p>
-                <p>
-                    <strong>Time:</strong>
-                    1:00 PM
-                </p>
-                <button
-                    class="basic-button"
-                    onclick="TODO:placeholder">
-                    Join Room
-                </button>
+            <div class="form-group">
+                <label for="password">
+                    Password:
+                </label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    required>
             </div>
-        </div>
+            <div class="form-group">
+                <label for="confirmPassword">
+                    Confirm Password:
+                </label>
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    required>
+            </div>
+            <!-- Success/error messages show here -->
+            <p id="formMessage" aria-live="polite"></p>
+            <button
+                type="submit"
+                class="basic-button">
+                Register
+            </button>
+        </form>
         <button
             class="back-button"
             onclick="location.href='MainMenu.html'">
