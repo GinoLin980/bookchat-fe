@@ -1,5 +1,7 @@
 // Import the function that sends a GET request to the backend and returns the available rooms.
-// import { getRooms } from "./BookChat.js";
+// import getRooms
+
+//Hello!!!
 
 
 
