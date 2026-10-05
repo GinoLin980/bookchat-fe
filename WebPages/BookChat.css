@@ -83,6 +83,28 @@ body {
     /* border-radius: 10px; */
 }
 
+.register-Page {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: var(--bc-card);
+    border: 1px solid var(--bc-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.10);
+}
+
+#loginForm {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: var(--bc-card);
+    border: 1px solid var(--bc-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.10);
+}
+
 .MainMenuButtons {
     background: var(--bc-secondary);
     width: 100%;
