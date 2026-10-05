@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Book Chat - Room</title>
     <link rel="stylesheet" href="BookChat.css">
     <script src="BookChat.js" defer></script>
@@ -15,91 +16,42 @@
         <h1>
             Discuss Your Book Here
         </h1>
-        <!-- Again the following is just an example of the room elements the js should place -->
+        <!-- Room.js fills this in from GET /rooms/:id.
+             It also adds the Manage Room button (moderator only) with the
+             room id in the link: ManageRoom.html?id=<roomId>.
+             Don't put a Manage Room button here: a static one has no id,
+             so ManageRoom.js would send you to JoinRoom.html. -->
         <div id="roomInfo" class="room-info">
-            <h2>Moby Dick Discussion</h2>
-            <p>
-                <strong>Book Title: </strong>
-                Moby Dick
-                <strong>Author:</strong>
-                Herman Melville
-            </p>
-            <p>
-                <strong>Date:</strong>
-                September 27, 2026
-            </p>
-            <p>
-                <strong>Time:</strong>
-                1:00 PM
-            </p>
-            <!-- JS should make this button disappear for non-moderators 
-                (Note it is currently displayed for testing purposes)
-                also that onclick should change to reference the specific manage page for the specific room we are on -->
-            <button
-                id="manageRoomButton"
-                class="basic-button"
-                onclick="location.href='ManageRoom.html'"
-                >
-                <!-- Add this to inline styling for the button style="display: none;" -->
-                Manage Room
-            </button>
+            <p>Loading room...</p>
         </div>
         <div class="current-turn">
             Current Turn:
             <span id="currentTurn">
-                Example Name JS Should Alter This
+                Loading...
             </span>
         </div>
-        <!-- JS should change this to appropriate msg depending on 
-            if they have permission or not, if it is their turn, if they are logged in.
-            Along the lines of:
-            Not permitted:
-                Your Participation
-                You do not have permission to participate/comment
-                [button to request permission]
-            Permission given but waiting your turn:
-                Your Participation
-                You have permission to participate
-                Waiting for the moderator to give you a turn
-                Comment box should be disabled
-                [buttons to post comment or pass (note these shouldn't work in this case)]
-            Permission given and it is your turn:
-                Your Participation
-                It is your turn
-                Comment box should be enabled
-                [buttons to post comment or pass (btns should work in this case)]
-            Not logged in:
-                Your Participation
-                You must be logged in to participate/comment
-                [login button]
+        <!-- Room.js sets this message from the participation state:
+            Not logged in:      must log in to participate + [login button]
+            No permission:      no permission yet + permission request form
+            Pending:            request sent, waiting for moderator approval
+            Waiting:            has permission, waiting for a turn (comment box disabled)
+            My turn:            comment box enabled, Post Comment / Pass Turn work
+            Moderator:          can comment at any time
+            Ended:              discussion over, no one can comment
              -->
         <div class="participation-status">
             <h2>Your Participation Status</h2>
             <p id="participationStatus">
-                You do not currently have the turn.
+                Loading...
             </p>
         </div>
         <h2>Discussion</h2>
+        <!-- Room.js places the comments here -->
         <div id="comments">
-            <!-- Again this is just an example comment for the discussion JS should be placing these -->
-            <div class="comment">
-                <div class="comment-author">
-                    Example Name
-                </div>
-                <div>
-                    Blah Blah Blah I'm Tired
-                </div>
-            </div>
-            <div class="comment">
-                <div class="comment-author">
-                    Example Name
-                </div>
-                <div>
-                    Blah Blah Blah What?
-                </div>
-            </div>
+            <p>Loading comments...</p>
         </div>
-        <div id="commentArea" class="comment-area">
+        <!-- Hidden until Room.js knows the user is approved or the moderator -->
+        <div id="commentArea" class="comment-area" hidden>
             <form id="commentForm">
                 <div class="form-group">
                     <label for="commentText">
@@ -110,8 +62,7 @@
                         name="commentText"
                         rows="5"
                         placeholder="You can comment when it is your turn"
-                        disabled>
-                    </textarea>
+                        disabled></textarea>
                 </div>
                 <button
                     type="submit"
@@ -129,7 +80,8 @@
                 </button>
             </form>
         </div>
-        <div class="permission-request">
+        <!-- Hidden until Room.js knows the user can request permission -->
+        <div class="permission-request" hidden>
             <h2>Participate in Discussion</h2>
             <p>
                 You must have read this book to participate in the discussion.
@@ -152,6 +104,7 @@
             </form>
         </div>
         <button
+            type="button"
             class="back-button"
             onclick="location.href='MainMenu.html'">
             Back to Main Menu

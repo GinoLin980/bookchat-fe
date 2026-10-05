@@ -25,10 +25,6 @@ const passButton = document.getElementById("passButton");
 const permissionSection = document.querySelector(".permission-request");
 const permissionForm = document.getElementById("permissionForm");
 
-if (!roomId) {
-    location.href = "JoinRoom.html";
-}
-
 /* Small helpers */
 
 // Users may come back as a plain username or as an object; handle both.
@@ -64,8 +60,7 @@ function infoLine(label, value) {
     return p;
 }
 
-/* Participation states (from the state diagram)
-   */
+/* Participation states (from the state diagram) */
 const State = {
     NOT_LOGGED_IN: "NOT_LOGGED_IN", // must log in to participate
     NO_PERMISSION: "NO_PERMISSION", // Confirm Read Book -> Submit Permission Request
@@ -100,7 +95,7 @@ function computeState(room) {
     return State.NO_PERMISSION;
 }
 
-/* Rendering*/
+/* Rendering */
 function renderRoomInfo(room, state) {
     const when = new Date(room.scheduled_date);
     const heading = document.createElement("h2");
@@ -118,11 +113,12 @@ function renderRoomInfo(room, state) {
     // Manage Room button only for the moderator, linked to THIS room
     if (state === State.MODERATOR) {
         const manage = document.createElement("button");
+        manage.type = "button";
         manage.id = "manageRoomButton";
         manage.className = "basic-button";
         manage.textContent = "Manage Room";
         manage.addEventListener("click", () => {
-            location.href = "ManageRoom.html?id=" + roomId;
+            location.href = "ManageRoom.html?id=" + encodeURIComponent(roomId);
         });
         roomInfo.append(manage);
     }
@@ -176,6 +172,7 @@ function renderParticipation(state) {
     let loginButton = document.getElementById("loginToParticipate");
     if (state === State.NOT_LOGGED_IN && !loginButton) {
         loginButton = document.createElement("button");
+        loginButton.type = "button";
         loginButton.id = "loginToParticipate";
         loginButton.className = "basic-button";
         loginButton.textContent = "Login";
@@ -196,7 +193,7 @@ async function refreshRoom() {
     renderParticipation(state);
 }
 
-/* Action*/
+/* Actions */
 
 // Post Comment -> Comment Added to Discussion Room -> Turn Ends
 commentForm.addEventListener("submit", async (event) => {
@@ -242,13 +239,23 @@ permissionForm.addEventListener("submit", async (event) => {
     }
 });
 
-/*  Start */
-commentText.value = ""; // clear the whitespace inside <textarea> in the HTML
+/* Start */
+// Runs last, after every constant, helper and event listener above exists.
+// The early return stops the fetch and the polling timer when there's no id
+// (setting location only starts navigation; it doesn't stop the script).
+function start() {
+    if (!roomId) {
+        location.replace("JoinRoom.html");
+        return;
+    }
 
-refreshRoom().catch((error) => {
-    participationStatus.textContent = error.message;
-});
+    refreshRoom().catch((error) => {
+        participationStatus.textContent = error.message;
+    });
 
-// Keep the page current. Errors here just get logged so a brief network
-// blip doesn't spam alerts every 3 seconds.
-setInterval(() => refreshRoom().catch(console.error), REFRESH_MS);
+    // Keep the page current. Errors here just get logged so a brief network
+    // blip doesn't spam alerts every 3 seconds.
+    setInterval(() => refreshRoom().catch(console.error), REFRESH_MS);
+}
+
+start();
