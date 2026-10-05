@@ -15,6 +15,8 @@
     --bc-border: #800020;
 }
 
+
+/*all the css Stuff*/
 * {
     box-sizing: border-box;
 }
@@ -105,10 +107,24 @@ body {
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.10);
 }
 
+#createRoomForm {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: var(--bc-card);
+    border: 1px solid var(--bc-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.10);
+}
+
+
+
 .MainMenuButtons {
     background: var(--bc-secondary);
     width: 100%;
     max-width: 450px;
+    border-radius: 8px;
     margin: 0 auto;
     padding: 25px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
@@ -224,6 +240,7 @@ body {
     background: var(--bc-secondary);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     width: 100%;
+    border-radius: 8px;
     margin:0 auto;
     padding: 20px;
     display: flex;
