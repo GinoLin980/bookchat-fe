@@ -1,4 +1,7 @@
 /* global login */
+
+
+
 // Login.js - page script for Login.html
 // login() in BookChat.js calls POST /login and saves the token + username.
 
@@ -19,6 +22,7 @@ loginForm.addEventListener("submit", async (event) => {
             loginForm.username.value.trim(),
             loginForm.password.value
         );
+
         location.href = "MainMenu.html";
     } catch (error) {
         // ApiError carries a readable message from the server or defaultReason().
