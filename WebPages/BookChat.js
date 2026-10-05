@@ -1,7 +1,6 @@
-// bookchat.js the one place the frontend talks to the Go backend.
-// Pages import the functions they need, e.g.:
-//   
-// and load their script with <script type="module" src="rooms.js"></script>
+// BookChat.js the one place the frontend talks to the Go backend.
+// every page loads it first with <script src="BookChat.js" defer></script>
+// then its own page script, so these functions are ready to use
 
 const BASE_URL ="https://bookchat.ginol.in/api/v1";// the deployed backend
 //the names of the keys in local storage for the token and username
@@ -86,7 +85,15 @@ if(!response.ok){
         //unauthorized, clear the session
         logout();
     }
-    const reason= data?.reason ?? data?.error ?? data?.message ?? defaultReason(response.status);
+    let reason= data?.reason ?? data?.error ?? data?.message;
+    //validation errors come back like { "state": "failed: oneof" }, show those too
+    if(!reason && data && typeof data === "object"){
+        reason = Object.entries(data).map(([field, problem]) => field + " " + problem).join(", ");
+    }
+    //nothing useful from the server, use our own message
+    if(!reason){
+        reason = defaultReason(response.status);
+    }
     //throw stops this function and sends the error to the caller
     throw new ApiError(reason,response.status);
 }
@@ -131,7 +138,7 @@ if(data?.token){
 return data;
 }
 
-//POST /api/v1/register(400 if username already exists)
+//POST /api/v1/register(409 if username already exists)
 //returns { status, token, username }
 async function register(username,password){
     console.log('register request sent');
@@ -143,21 +150,10 @@ if(data?.token){
 return data;
 }
 
-// async function register(event, form){
-//     username = form.username.value;
-//     password = form.password.value;
-// const data = await request("POST","/register",{username,password});
-// //only save the session if the backend sent a token back
-// if(data?.token){
-//     saveSession(data.username,data.token);
-// }
-// return data;
-// }
-
 //GET /api/v1/rooms
 //returns a promise that resolves to an array of room previews
-//{ room_id, title, book_title, book_author, scheduled_date, moderator }
-//optional search, check the param names in swagger e.g. getRooms({ keyword: "dune" })
+//{ room_id, title, book_title, book_author, scheduled_date, moderator, state }
+//optional search by id or title e.g. getRooms({ title: "dune" })
 async function getRooms(params = {}){
 const query = new URLSearchParams(params).toString();
 return await request("GET",`/rooms${query ? "?" + query : ""}`);
@@ -166,7 +162,8 @@ return await request("GET",`/rooms${query ? "?" + query : ""}`);
 //GET /api/v1/rooms/:roomId
 //returns a promise that resolves to the room object
 //{ room_id, title, book_title, book_author, scheduled_date, created_at,
-//  moderator, registered, requested, role, comments, assigned_to_comment }
+//  moderator, registered, requested, role, comments, assigned_to_comment, state }
+//users come back as { user_id, username }
 async function getRoom(roomId){
 return await request("GET",`/rooms/${encodeURIComponent(roomId)}`);
 }
@@ -186,14 +183,17 @@ async function getComments(roomId){
     return request("GET", `/rooms/${encodeURIComponent(roomId)}/comments`);
 }
 
+//POST /api/v1/rooms/{id}/comments
+//403 if it's not your turn, you're not approved, it hasn't started or it ended
 async function createComment(roomId, content){
     return request("POST", `/rooms/${encodeURIComponent(roomId)}/comments`, { content });
 }
 // PATCH /rooms/{id} — moderator only
 // pass only what you want to change, using the backend names, e.g.
 //   updateRoom(5, { title: "New title" })
-//   updateRoom(5, { assigned_to_comment: userId })
-//   updateRoom(5, { state: "started" })
+//   updateRoom(5, { assigned_to_comment: userId, state: "started" })
+//   updateRoom(5, { state: "ended" })
+// the backend needs state ("started" or "ended") in every patch for now or it returns 400
 // allowed: title, book_title, book_author, scheduled_date, state,
 //          add_user_id, approve_user_id, assigned_to_comment
 
@@ -229,16 +229,14 @@ function applyToRoom(roomId) {
 function approveUser(roomId, userId) {
   return request("POST", `/rooms/${encodeURIComponent(roomId)}/approve`, { approve_user_id: Number(userId) });
 }
-// Deny a permission request — moderator only
-//TODO: match the path/body to the deny route in swagger
+// POST /rooms/{id}/deny — moderator only
 //takes the user id, same as approveUser()
 function denyUser(roomId, userId) {
   return request("POST", `/rooms/${encodeURIComponent(roomId)}/deny`, { deny_user_id: Number(userId) });
 }
 
-// Pass the turn — only the user whose turn it is
-//TODO: match the path/body to the pass turn route in swagger
+// POST /rooms/{id}/pass — only the user whose turn it is, no body
+//404 if it's not your turn
 function passTurn(roomId) {
   return request("POST", `/rooms/${encodeURIComponent(roomId)}/pass`);
 }
-

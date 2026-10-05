@@ -1,17 +1,11 @@
-/* global isLoggedIn, getUsername, getRoom, approveUser, denyUser, updateRoom */
-// ManageRoom.js - page script for ManageRoom.html  (URL: ManageRoom.html?id=5)
-// Moderator side of the state diagram:
-//   Moderator Decision (Allow / Deny), Moderator Gives Turn, Ends Discussion
-// The backend checks moderator-only actions too; the checks here just
-// keep non-moderators from seeing a page that won't work for them.
+// ManageRoom.js - page script for ManageRoom.html (ManageRoom.html?id=5)
+// moderator side of the state diagram: allow/deny, give turn, end discussion
+// uses BookChat.js: isLoggedIn, getUsername, getRoom, approveUser, denyUser, updateRoom
 
+//room id from the url
 const roomId = new URLSearchParams(location.search).get("id");
-const REFRESH_MS = 3000;
 
-// TODO: confirm the exact value the backend uses for an ended room
-const ENDED_STATE = "ended";
-
-// Page elements
+//page elements
 const roomInfo = document.getElementById("roomInfo");
 const permissionList = document.getElementById("userPermissionList");
 const currentTurn = document.getElementById("currentTurn");
@@ -20,163 +14,197 @@ const endButton = document.getElementById("endDiscussionButton");
 const backButton = document.getElementById("backToRoom");
 
 
+//helpers
 
-/*
-   Small helpers (same as Room.js)TODO: once you've seen a real response, simplify to the one shape.*/
-function nameOf(user) {
-    if (user == null) return null;
-    if (typeof user === "string") return user;
-    return user.username ?? user.name ?? null;
+//true if the scheduled time has passed
+function isTimeToStart(room) {
+    const now = new Date();
+    const scheduled = new Date(room.scheduled_date);
+    return now >= scheduled;
 }
 
-// The backend takes user ids for approve/deny/assign
-function idOf(user) {
-    if (user == null || typeof user !== "object") return null;
-    return user.user_id ?? user.id ?? null;
+//button that runs onClick
+function makeButton(text, onClick) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "basic-button";
+    button.textContent = text;
+    button.addEventListener("click", onClick);
+    return button;
 }
 
-function assignedName(room) {
-    const a = room.assigned_to_comment;
-    if (a == null || a === 0) return null;
-    if (typeof a === "number") {
-        const user = (room.registered ?? []).find((u) => idOf(u) === a);
-        return nameOf(user) ?? `User #${a}`;
-    }
-    return nameOf(a);
-}
-
-function infoLine(label, value) {
+//line like "Book: Moby Dick"
+function makeLine(label, value) {
     const p = document.createElement("p");
     const strong = document.createElement("strong");
     strong.textContent = label + ": ";
-    p.append(strong, value ?? "");
+    p.append(strong, value);
     return p;
 }
 
-function actionButton(label, onClick) {
-    const b = document.createElement("button");
-    b.className = "basic-button";
-    b.textContent = label;
-    b.addEventListener("click", onClick);
-    return b;
-}
-
-// Run a moderator action, then refresh so the lists update
-async function moderatorAction(action) {
+//run an action then reload the room
+async function doAction(action) {
     try {
         await action();
-        await refreshManage();
+        await loadRoom();
     } catch (error) {
         alert(error.message);
     }
 }
 
-/* Rendering */
-function renderRoomInfo(room) {
-    const when = new Date(room.scheduled_date);
-    const heading = document.createElement("h2");
-    heading.textContent = room.title;
+
+//rendering
+
+//room details
+function showRoomInfo(room) {
+    const date = new Date(room.scheduled_date);
+
+    let state = "Not started";
+    if (room.state === "ended") {
+        state = "Ended";
+    } else if (isTimeToStart(room)) {
+        state = "In progress";
+    }
+
+    const title = document.createElement("h2");
+    title.textContent = room.title;
 
     roomInfo.replaceChildren(
-        heading,
-        infoLine("Book", room.book_title),
-        infoLine("Author", room.book_author),
-        infoLine("Date", when.toLocaleDateString(undefined, { dateStyle: "long" })),
-        infoLine("Time", when.toLocaleTimeString(undefined, { timeStyle: "short" })),
-        infoLine("Moderator", nameOf(room.moderator)),
-        infoLine("State", room.state)
+        title,
+        makeLine("Book", room.book_title),
+        makeLine("Author", room.book_author),
+        makeLine("Date", date.toLocaleDateString()),
+        makeLine("Time", date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })),
+        makeLine("Moderator", room.moderator.username),
+        makeLine("State", state)
     );
 }
 
-// Permission Requests: Allow -> Approved, Deny -> Permission Not Given
-function renderRequests(room) {
+//permission requests: allow -> approved, deny -> permission not given
+function showRequests(room) {
     permissionList.replaceChildren();
-    const requested = room.requested ?? [];
-    if (requested.length === 0) {
+
+    if (!room.requested || room.requested.length === 0) {
         permissionList.textContent = "No pending requests.";
         return;
     }
-    for (const user of requested) {
+
+    for (const user of room.requested) {
         const row = document.createElement("div");
         row.className = "user-item";
-        row.append(
-            nameOf(user) + " ",
-            actionButton("Allow", () => moderatorAction(() => approveUser(roomId, idOf(user)))),
-            actionButton("Deny", () => moderatorAction(() => denyUser(roomId, idOf(user))))
-        );
+
+        //backend wants the user id not the username
+        const allow = makeButton("Allow", function () {
+            doAction(() => approveUser(roomId, user.user_id));
+        });
+        const deny = makeButton("Deny", function () {
+            doAction(() => denyUser(roomId, user.user_id));
+        });
+
+        row.append(user.username + " ", allow, deny);
         permissionList.append(row);
     }
 }
 
-// User List: approved users the moderator can give the turn to
-function renderTurnList(room) {
+//user list: approved users that can get the turn
+function showUsers(room) {
     turnList.replaceChildren();
-    const registered = room.registered ?? [];
-    if (registered.length === 0) {
+
+    //skip the moderator, they can always comment
+    const users = (room.registered || []).filter(
+        (user) => user.user_id !== room.moderator.user_id
+    );
+
+    if (users.length === 0) {
         turnList.textContent = "No approved users yet.";
         return;
     }
-    const ended = room.state === ENDED_STATE;
-    for (const user of registered) {
+
+    //only during the discussion
+    const canGiveTurn = isTimeToStart(room) && room.state !== "ended";
+
+    for (const user of users) {
         const row = document.createElement("div");
         row.className = "user-item";
 
-        // Moderator Gives Turn -> PATCH /rooms/:id { assigned_to_comment }
-        // TODO: confirm assigned_to_comment takes the user id (not the username)
-        const give = actionButton("Give Turn", () =>
-            moderatorAction(() => updateRoom(roomId, { assigned_to_comment: idOf(user) }))
-        );
-        give.disabled = ended;
+        //PATCH /rooms/:id needs a state in the body or it returns 400
+        const giveTurn = makeButton("Give Turn", function () {
+            doAction(() => updateRoom(roomId, { assigned_to_comment: user.user_id, state: "started" }));
+        });
+        giveTurn.disabled = !canGiveTurn;
 
-        row.append(nameOf(user) + " ", give);
+        row.append(user.username + " ", giveTurn);
         turnList.append(row);
     }
 }
 
-async function refreshManage() {
+//current turn, assigned_to_comment is a user id
+function showCurrentTurn(room) {
+    const turnUser = (room.registered || []).find(
+        (user) => user.user_id === room.assigned_to_comment
+    );
+
+    if (turnUser) {
+        currentTurn.textContent = turnUser.username;
+    } else {
+        currentTurn.textContent = "No one yet";
+    }
+}
+
+
+//load the room
+
+async function loadRoom() {
     const room = await getRoom(roomId);
 
-    // Only the moderator should be here
-    const isModerator = room.role === "moderator" || nameOf(room.moderator) === getUsername();
-    if (!isModerator) {
+    //only the moderator can use this page
+    if (room.moderator.username !== getUsername()) {
         alert("Only the moderator can manage this room.");
-        location.href = "Room.html?id=" + roomId;
+        location.replace("Room.html?id=" + roomId);
         return;
     }
 
-    renderRoomInfo(room);
-    renderRequests(room);
-    currentTurn.textContent = assignedName(room) ?? "No one yet";
-    renderTurnList(room);
-    endButton.disabled = room.state === ENDED_STATE;
+    showRoomInfo(room);
+    showRequests(room);
+    showCurrentTurn(room);
+    showUsers(room);
+    endButton.disabled = room.state === "ended";
 }
 
-/*  Actions */
 
-// Moderator Ends Discussion -> Discussion Ended, No One Can Comment
-endButton.addEventListener("click", () => {
-    if (!confirm("End the discussion for everyone?")) return;
-    moderatorAction(() => updateRoom(roomId, { state: ENDED_STATE }));
+//buttons
+
+//end discussion -> no one can comment
+endButton.addEventListener("click", function () {
+    if (confirm("End the discussion for everyone?")) {
+        doAction(() => updateRoom(roomId, { state: "ended" }));
+    }
 });
 
-// Back to THIS room, not a hardcoded Room.html
-backButton.addEventListener("click", () => {
+//back to this room
+backButton.addEventListener("click", function () {
     location.href = "Room.html?id=" + roomId;
 });
 
-/* Start */
-/* Start */
+
+//start
+
 function start() {
+    //no room id, go pick one
     if (!roomId) {
         location.replace("JoinRoom.html");
         return;
     }
+    //not logged in
     if (!isLoggedIn()) {
         location.replace("Login.html");
         return;
     }
-    refreshManage().catch((error) => alert(error.message));
-    setInterval(() => refreshManage().catch(console.error), REFRESH_MS);
+
+    loadRoom().catch((error) => alert(error.message));
+
+    //reload every 3 seconds
+    setInterval(() => loadRoom().catch(console.error), 3000);
 }
 
 start();
