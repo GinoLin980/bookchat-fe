@@ -207,7 +207,8 @@ async function loadRoom() {
 //post comment -> comment added -> turn ends
 commentForm.addEventListener("submit", async function (event) {
     event.preventDefault();
-    const content = commentText.value.trim();
+    const local_time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit'});
+    const content = getUsername() + " (" + local_time + "): " + commentText.value.trim();
     if (!content) return;
 
     postButton.disabled = true;
