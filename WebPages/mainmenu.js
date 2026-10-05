@@ -6,7 +6,6 @@ function updateLoginButton() {
 }
 
 loginButton.addEventListener("click", () => {
-    console.log('jz', isLoggedIn())
     if (isLoggedIn()) {
         logout();
         updateLoginButton();
