@@ -80,6 +80,8 @@ try{
 
 //check for errors
 if(!response.ok){
+    // show the real status and raw body in the console while developing
+    console.error(method, path, response.status, text);
     if(response.status === 401){
         //unauthorized, clear the session
         logout();
@@ -98,6 +100,7 @@ switch(status){
     case 401: return "Please log in to continue";
     case 403: return "You do not have permission to access this resource";
     case 404: return "Resource not found";
+    case 409: return "That username is already taken";
     case 422: return "That user has not requested to join this room";
     case 500: return "Server error, please try again later";
     default: return "An unknown error occurred. Please try again later.";
@@ -187,14 +190,32 @@ async function createComment(roomId, content){
     return request("POST", `/rooms/${encodeURIComponent(roomId)}/comments`, { content });
 }
 // PATCH /rooms/{id} — moderator only
-//pass only what you want to change using the backend names e.g. updateRoom(5, { title: "New title" })
-//allowed: title, book_title, book_author, scheduled_date, add_user_id, approve_user_id, assigned_to_comment
+// pass only what you want to change, using the backend names, e.g.
+//   updateRoom(5, { title: "New title" })
+//   updateRoom(5, { assigned_to_comment: userId })
+//   updateRoom(5, { state: "started" })
+// allowed: title, book_title, book_author, scheduled_date, state,
+//          add_user_id, approve_user_id, assigned_to_comment
+
+// fields the Go backend expects as integers
+const INT_FIELDS = ["add_user_id", "approve_user_id", "assigned_to_comment"];
+
 function updateRoom(roomId, changes) {
-  //room_id is required in the body too
-  const body = { ...changes, room_id: Number(roomId) };
-  if(body.scheduled_date){
-      body.scheduled_date = toISODate(body.scheduled_date);
+  // copy so we never modify the caller's object
+  const body = { ...changes };
+
+  // convert any id fields to real numbers so Go can decode them
+  for (const key of INT_FIELDS) {
+    if (key in body) {
+      body[key] = Number(body[key]);
+    }
   }
+
+  if (body.scheduled_date) {
+    body.scheduled_date = toISODate(body.scheduled_date);
+  }
+
+  // the room id goes in the URL only, not the body
   return request("PATCH", `/rooms/${encodeURIComponent(roomId)}`, body);
 }
 
@@ -220,3 +241,4 @@ function denyUser(roomId, userId) {
 function passTurn(roomId) {
   return request("POST", `/rooms/${encodeURIComponent(roomId)}/pass`);
 }
+

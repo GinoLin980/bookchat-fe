@@ -19,11 +19,7 @@ const turnList = document.getElementById("userTurnList");
 const endButton = document.getElementById("endDiscussionButton");
 const backButton = document.getElementById("backToRoom");
 
-if (!roomId) {
-    location.href = "JoinRoom.html";
-} else if (!isLoggedIn()) {
-    location.href = "Login.html";
-}
+
 
 /*
    Small helpers (same as Room.js)TODO: once you've seen a real response, simplify to the one shape.*/
@@ -169,5 +165,18 @@ backButton.addEventListener("click", () => {
 });
 
 /* Start */
-refreshManage().catch((error) => alert(error.message));
-setInterval(() => refreshManage().catch(console.error), REFRESH_MS);
+/* Start */
+function start() {
+    if (!roomId) {
+        location.replace("JoinRoom.html");
+        return;
+    }
+    if (!isLoggedIn()) {
+        location.replace("Login.html");
+        return;
+    }
+    refreshManage().catch((error) => alert(error.message));
+    setInterval(() => refreshManage().catch(console.error), REFRESH_MS);
+}
+
+start();
